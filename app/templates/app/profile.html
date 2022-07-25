@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_text %}
+    <div class="alert alert-primary" role="alert">
+        <h1 align="center">{{ user_profile.user.username }}'s profile</h1>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="profile_content">
+        <img id="profile_img" src="{{ user_profile.profile_pic.url }}">
+        {{ user_profile.user.username }}<br><br>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            New avatar: {{ profile_form.profile_pic }}
+            <hr>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        Phone: {{ profile_form.phone }}
+                        <span style="color: red">{{ profile_form.phone.errors }}</span>
+                    </div>
+                    <div class="col-sm">
+                        Birth date: {{ profile_form.birth_date }}
+                        <span style="color: red">{{ profile_form.birth_date.errors }}</span>
+                    </div>
+                    <div class="col-sm">
+                        Location: {{ profile_form.location }}
+                        <span style="color: red">{{ profile_form.location.errors }}</span>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <button type="submit" onclick="success()" class="btn btn-success">Update</button>
+        </form>
+    </div>
+    <hr>
+    <div class="container">
+        {% if orders %}
+            <h3 align="center"> Your orders: </h3><br>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Order№</th>
+                    <th scope="col">Items</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col">Delivery</th>
+                    <th scope="col">Issue point</th>
+                    <th scope="col">Cost</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <th scope="row">{{ order.id }}</th>
+                        <td>
+                            {% for item in order.items.all %}
+                                <img width="50" src="{{ item.image.url }}">
+                                {{ item.title }} ({{ item.price }}$)<br>
+                            {% endfor %}
+                        </td>
+                        <td>{{ order.created }}</td>
+                        <td>{{ order.updated }}</td>
+                        <td>{{ order.issue_point }}</td>
+                        <td>{{ order.delivery_address }}</td>
+                        <td>{{ order.total_cost }}$</td>
+                        {% if order.status == 'done' %}
+                            <td bgcolor="#adff2f">{{ order.status }}</td>
+                        {% else %}
+                            <td bgcolor="aqua">{{ order.status }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <h1 align="center">No orders </h1>
+        {% endif %}
+    </div>
+{% endblock %}
+

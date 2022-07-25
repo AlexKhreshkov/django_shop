@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block head_text %}
+    <div class="alert alert-primary" role="alert">
+        <h1 align="center"> Online Shop</h1>
+    </div>
+{% endblock %}
+
+{% block cart %}
+    {% if cart %}
+        <h4 align="right">
+            {% if cart_len == 1 %}
+                <br>
+                <a href="{% url 'show_cart' %}" class="btn btn-info" role="button">Cart <span class="badge badge-light">1</span></a>
+            {% else %}
+                <a href="{% url 'show_cart' %}" class="btn btn-info" role="button">Cart <span
+                        class="badge badge-light">{{ cart_len }}</span></a>
+            {% endif %}
+        </h4>
+    {% else %}
+        <h4 align="right">Cart is empty</h4>
+    {% endif %}
+{% endblock %}
+
+{% block categories %}
+    Search by category:
+    {% if page_name %}
+        <a class="selected" href="{% url 'main' %}">all</a>
+    {% else %}
+        <a href="{% url 'main' %}">all</a>
+    {% endif %}
+    {% for cat in categories %}
+        {% if cat.name == title %}
+            <a class="selected" href="{% url 'show_by_category' cat.slug %}">{{ cat.name }}</a>
+        {% else %}
+            <a href="{% url 'show_by_category' cat.slug %}">{{ cat.name }}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block body %}
+    {% if items %}
+        {% for item in items %}
+            <div class="item-block">
+                <img class="item_img" src="{{ item.image.url }}">
+                Item: <a href="{{ item.get_absolute_url }}">{{ item.title }}</a><br>
+                Category: {{ item.category }}<br>
+                Price: {{ item.price }}$ <br>
+                Rating: {{ item.mark }}
+                <form method="post" action="{% url 'add_item' item.slug %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success" id="{{ item.id }}">Add to cart</button>
+                </form>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <h1>No items :(</h1>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,50 @@
+.item_img{
+    display: block;
+    width: 400px;
+    height: 300px;
+}
+
+#profile_img{
+    width: 200px;
+    height: 200px;
+}
+
+.profile_content{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.selected {
+    color: red;
+    pointer-events: none;
+    cursor: default;
+}
+
+.order-form{
+    margin: 3%;
+}
+
+.item-block {
+    margin-left: 5%;
+}
+
+.comments {
+
+}
+#order-form{
+    margin: 5px;
+}
+ul {
+    list-style: none; /*убираем маркеры списка*/
+    margin: 0; /*убираем отступы*/
+    padding-left: 0; /*убираем отступы*/
+}
+
+a {
+    text-decoration: none; /*убираем подчеркивание текста ссылок*/
+}
+
+li {
+    float: left; /*Размещаем список горизонтально для реализации меню*/
+    margin-right: 5px; /*Добавляем отступ у пунктов меню*/
+}

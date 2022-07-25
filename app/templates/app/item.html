@@ -1,0 +1,104 @@
+{% extends 'app/../base.html' %}
+{% load static %}
+
+{% block head_text %}
+    <div class="alert alert-primary" role="alert">
+        <h1 align="center">Item's page: {{ item.title.capitalize }}</h1>
+    </div>
+{% endblock %}
+
+{% block categories %}
+{% endblock %}
+
+
+{% block body %}
+    <div class="item-block">
+        <img class="item_img" src="{{ item.image.url }}">
+        Item: {{ item.title }}<br>
+        Rating: 3 <br>
+        Category: {{ item.category }}<br>
+        Price: {{ item.price }}$ <br>
+        Rating: {{ item.mark }} <br>
+        Description: {{ item.description|safe }}
+        <form method="post" action="{% url 'add_item' item.slug %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success" id="{{ item.id }}">Add to cart</button>
+        </form>
+    </div>
+    <hr>
+    {% if comments %}
+        <div class="container">
+        <h1 class="comments-title">Comments: {{ comments.count }}</h1>
+        {% for comment in comments %}
+            <div class="be-comment">
+                <div class="be-img-comment">
+                    {% if comment.user.profile.profile_pic %}
+                        <img src="{{ comment.user.profile.profile_pic.url }}" class="be-ava-comment">
+                    {% else %}
+                        <img src="{% static 'app/img/ava.png' %}" class="be-ava-comment">
+                    {% endif %}
+                </div>
+                <div class="be-comment-content">
+                    <span class="be-comment-name">
+                        <a>{{ comment.user.username }}</a>
+                    </span>
+                    <span class="be-comment-time">
+                            <i class="fa fa-clock-o"></i>
+                            {{ comment.created }}
+                            </span>
+                    <p class="be-comment-text">{{ comment.text }}</p>
+                    <span style="color: red">Mark: {{ comment.mark }}</span>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+        {% if user.is_authenticated %}
+            <br><h3 align="center">Leave your comment</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="be-comment">
+                    <div class="form-group">
+                        <div class="be-img-comment">
+                            {% if user.profile.profile_pic.url %}
+                                <img src="{{ user.profile.profile_pic.url }}" class="be-ava-comment">
+                            {% else %}
+                                <img src="{% static 'media/profiles_images/ava.png' %}" class="be-ava-comment">
+                            {% endif %}
+                        </div>
+                        <div class="be-comment-content">
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% else %}
+            <h3 align="center">Login to add comment!</h3>
+        {% endif %}
+    {% else %}
+        {% if user.is_authenticated %}
+            <br><h3 align="center">Leave your comment</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="be-comment">
+                    <div class="form-group">
+                        <div class="be-img-comment">
+                            {% if user.profile.profile_pic.url %}
+                                <img src="{{ user.profile.profile_pic.url }}" class="be-ava-comment">
+                            {% else %}
+                                <img src="{% static 'media/profiles_images/ava.png' %}" class="be-ava-comment">
+                            {% endif %}
+                        </div>
+                        <div class="be-comment-content">
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% else %}
+            <h3 align="center">Login to add comment!</h3>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

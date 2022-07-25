@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_text %}
+    <div class="alert alert-primary" role="alert">
+        <h1 align="center"> Make order</h1>
+    </div>
+{% endblock %}
+{% block body %}
+    {% if cart %}
+        {% for item in cart %}
+            <div class="d-flex justify-content-center">
+                <div class="mt-auto p-2">
+                    <div><img width="200px" src="{{ item.image.url }}"></div>
+                    <a href="{% url 'show_item' item.slug %}">{{ item.title }}</a>
+                    ({{ item.price }}$) * {{ item.quantity }} = {{ item.total_price }}$
+                </div>
+            </div>
+        {% endfor %}
+        <hr>
+        <h3 align="center"> Total: {{ cart.get_total_price }}$</h3>
+        <div class="col-md-12 text-center">
+            <a href="{% url 'show_cart' %}" type="submit" class="btn btn-info">To cart</a>
+        </div>
+        <hr>
+        <h1 align="center">Your contacts</h1>
+        <div class="d-flex justify-content-center">
+            <form method="post">
+                <div class="form-group">
+                    {% csrf_token %}
+                    Full name: {{ form.full_name }} <br>
+                    Phone: {{ form.phone }}<br>
+                    Delivery address: {{ form.delivery_address }}<br>
+                    Issue point: {{ form.issue_point }}<br>
+                    <select name="items" required id ="id_items" hidden multiple>
+                        {% for item in order_items %}
+                            {% if item.id|stringformat:"i" in cart.cart.keys %}
+                            <option selected>{{ item.id }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button align="center" type="submit" class="btn btn-primary">Make order</button>
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <h1 align="center"> Cart is empty :(</h1>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block head_text %}
+    <title>{{ title }}</title>
+    <div class="alert alert-primary" role="alert">
+    <h1 align="center"> Cart</h1>
+    </div>
+{% endblock %}
+
+{% block body %}
+    {% if cart %}
+        {% for item in cart %}
+            <div class="item-block">
+                <img class="item_img" src="{{ item.image.url }}">
+                Item: <a href="{{ item.get_absolute_url }}">{{ item.title }}</a><br>
+                <form action="{% url 'update_count' item.slug %}" method="post">
+                    {% csrf_token %}
+                    New count: {{ form.quantity }}
+                    <button type="submit" class="btn btn-info">Update</button>
+                </form>
+                Price: {{ item.price }}$ <br>
+                Total price: {{ item.quantity }} * {{ item.price }}$ = {{ item.total_price }}$<br>
+                <form method="post" action="{% url 'delete_item' item.slug %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning" id="{{ item.id }}">Remove</button>
+                </form>
+            </div>
+            <hr>
+        {% endfor %}
+        <h3 align="center"> Total: {{ cart.get_total_price }}$</h3>
+        <div class="col-md-12 text-center">
+            <a href="{% url 'make_order' %}" type="submit" class="btn btn-primary">Make order</a>
+        </div>
+    {% else %}
+        <h1 align="center"> Cart is empty :(</h1>
+    {% endif %}
+{% endblock %}
