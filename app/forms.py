@@ -17,7 +17,7 @@ class UserProfileForm(forms.Form):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['full_name', 'phone', 'delivery_address', 'issue_point', 'total_cost','items','user']
+        fields = ['full_name', 'phone', 'delivery_address', 'issue_point', 'total_cost', 'items', 'user']
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
@@ -36,7 +36,7 @@ class AddCommentForm(forms.ModelForm):
         model = Comment
         fields = ['id', 'text', 'mark']
         widgets = {
-            'text': forms.Textarea(attrs={'class': 'form-control','placeholder':'Your text'}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Your text'}),
             'mark': forms.Select(attrs={'class': 'form-control'}),
         }
 
@@ -44,7 +44,7 @@ class AddCommentForm(forms.ModelForm):
 class AddProfileInfoForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['phone', 'birth_date', 'profile_pic','location']
+        fields = ['phone', 'birth_date', 'profile_pic', 'location']
         widgets = {
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'birth_date': forms.DateInput(attrs={'class': 'form-control'}),

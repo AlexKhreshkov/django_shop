@@ -1,7 +1,6 @@
 from django.urls import path, include
 
-from app.views import main, show_by_category, show_item, show_cart, add_to_cart, remove_from_cart, update_count, \
-    show_profile, make_order
+from app.views import *
 
 urlpatterns = [
     path('', main, name='main'),
@@ -13,4 +12,5 @@ urlpatterns = [
     path('cart/update-item-count/<slug:item_slug>/', update_count, name='update_count'),
     path('user-profile/<int:pk>/', show_profile, name='user_profile'),
     path('order/', make_order, name='make_order'),
+    path('product/<slug:item_slug>/comment/delete/<int:comment_id>/', delete_comment, name='delete_comment'),
 ]

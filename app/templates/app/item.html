@@ -15,7 +15,6 @@
     <div class="item-block">
         <img class="item_img" src="{{ item.image.url }}">
         Item: {{ item.title }}<br>
-        Rating: 3 <br>
         Category: {{ item.category }}<br>
         Price: {{ item.price }}$ <br>
         Rating: {{ item.mark }} <br>
@@ -48,6 +47,18 @@
                             </span>
                     <p class="be-comment-text">{{ comment.text }}</p>
                     <span style="color: red">Mark: {{ comment.mark }}</span>
+                    {% if  user.is_superuser %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <a style="color: #0000FF" href="{% url 'delete_comment' item.slug comment.id %}">Delete</a>
+                        </form>
+                    {% endif %}
+                    {% if comment.user == user %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <a style="color: #0000FF" href="{% url 'delete_comment' item.slug comment.id %}">Delete</a>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
             <hr>
@@ -67,7 +78,7 @@
                         </div>
                         <div class="be-comment-content">
                             {{ form.as_p }}
-                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </div>
                 </div>

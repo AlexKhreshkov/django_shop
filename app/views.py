@@ -1,3 +1,5 @@
+from statistics import mean
+
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
 from django.views.decorators.http import require_POST
@@ -42,11 +44,12 @@ def show_by_category(request, cat_slug):
 
 
 def show_item(request, item_slug):
+    """adding comments from admin doesn't change rating"""
+
     item = Item.objects.get(slug=item_slug)
     title = item.title
     comments = Comment.objects.filter(item_id__slug=item_slug)
     form = AddCommentForm()
-
     if request.method == 'POST':
         form = AddCommentForm(request.POST)
         if form.is_valid():
@@ -77,7 +80,25 @@ def show_item(request, item_slug):
     return render(request, 'app/item.html', context=context)
 
 
-@require_POST
+def delete_comment(request, item_slug, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    item = get_object_or_404(Item, slug=item_slug)
+    if comment.user == request.user or request.user.is_superuser:
+        comments = Comment.objects.filter(item_id__slug=item_slug)
+        com_count = comments.count()
+        item_mark = item.mark
+        com_mark = comment.mark.mark
+        if comments.count() == 1:
+            item.mark = None
+        else:
+            item.mark = round((comments.count() * item.mark - comment.mark.mark) / (comments.count() - 1), 1)
+        item.save()
+        comment.delete()
+        return redirect(item.get_absolute_url())
+    else:
+        return redirect(item.get_absolute_url())
+
+
 def add_to_cart(request, item_slug):
     c = Cart(request)
     item = get_object_or_404(Item, slug=item_slug)
@@ -85,7 +106,6 @@ def add_to_cart(request, item_slug):
     return redirect('show_cart')
 
 
-@require_POST
 def remove_from_cart(request, item_slug):
     c = Cart(request)
     item = get_object_or_404(Item, slug=item_slug)
@@ -100,7 +120,6 @@ def show_cart(request):
     return render(request, 'app/cart.html', {'cart': cart, 'form': form, 'title': 'Cart'})
 
 
-@require_POST
 def update_count(request, item_slug):
     cart = Cart(request)
     form = UpdateCountForm(request.POST)
