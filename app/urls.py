@@ -13,4 +13,5 @@ urlpatterns = [
     path('user-profile/<int:pk>/', show_profile, name='user_profile'),
     path('order/', make_order, name='make_order'),
     path('product/<slug:item_slug>/comment/delete/<int:comment_id>/', delete_comment, name='delete_comment'),
+    path('product/<slug:item_slug>/comment/change/<int:comment_id>/', change_comment, name='change_comment'),
 ]

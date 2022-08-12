@@ -4,8 +4,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
 from django.views.decorators.http import require_POST
 
-from app.forms import UpdateCountForm, OrderForm, AddCommentForm, UserProfileForm, AddUserInfoForm, \
-    AddProfileInfoForm
+from app.forms import *
 from app.models import Item, Category, Cart, User, Profile, Order, RatingMark, Comment
 
 
@@ -67,7 +66,6 @@ def show_item(request, item_slug):
                 for comment in comments:
                     sum_of_all_marks += comment.mark.mark
                     avg_mark = round(sum_of_all_marks / comments_count, 1)
-                    print(sum_of_all_marks, comments_count, avg_mark)
                 item.mark = avg_mark
                 item.save()
             return redirect(item.get_absolute_url())
@@ -99,6 +97,34 @@ def delete_comment(request, item_slug, comment_id):
         return redirect(item.get_absolute_url())
 
 
+def change_comment(request, item_slug, comment_id):
+    changeable_comment = get_object_or_404(Comment, pk=comment_id)
+    item = get_object_or_404(Item, slug=item_slug)
+    title = item.title
+    comments = Comment.objects.filter(item_id__slug=item_slug)
+    form = ChangeCommentForm(instance=changeable_comment)
+    old_rating = changeable_comment.mark.mark
+    if request.method == 'POST':
+        # !!! REMAKE WITH FORMS !!!
+        if not (changeable_comment.text == request.POST['text'] and
+                changeable_comment.mark == RatingMark.objects.get(pk=request.POST['mark'])):
+            changeable_comment.text = request.POST['text']
+            mark = RatingMark.objects.get(pk=request.POST['mark'])
+            changeable_comment.mark = mark
+            changeable_comment.save()
+        else:
+            print('Comment is the same')
+        return redirect(item.get_absolute_url())
+    context = {
+        'item': item,
+        'title': title,
+        'comments': comments,
+        'form': form,
+        'changeable_comment': changeable_comment,
+    }
+    return render(request, 'app/change_comment.html', context=context)
+
+
 def add_to_cart(request, item_slug):
     c = Cart(request)
     item = get_object_or_404(Item, slug=item_slug)
@@ -123,7 +149,6 @@ def show_cart(request):
 def update_count(request, item_slug):
     cart = Cart(request)
     form = UpdateCountForm(request.POST)
-    print(request.POST)
     if form.is_valid():
         item = get_object_or_404(Item, slug=item_slug)
         cart.change_quantity(item, form.cleaned_data['quantity'])
@@ -135,7 +160,6 @@ def show_profile(request, pk):
     user = get_object_or_404(User, id=pk)
     if request.user == user or request.user.is_superuser:
         orders = Order.objects.filter(user_id=pk)
-        user_form = UserProfileForm()
         if request.method == 'POST':
             profile_form = AddProfileInfoForm(request.POST, request.FILES, instance=profile)
             print(request.POST)
@@ -157,7 +181,6 @@ def show_profile(request, pk):
             'user': user,
             'title': f"{user.username}'s profile",
             'profile_form': profile_form,
-            'user_form': user_form,
         }
         return render(request, 'app/profile.html', context=context)
     else:

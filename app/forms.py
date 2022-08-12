@@ -4,20 +4,17 @@ from django.contrib.auth.models import User
 from app.models import Order, Comment, Profile
 
 allowed_choices = [(i, str(i)) for i in range(1, 11)]
+rating_marks_choices = [(i, str(i)) for i in range(1, 6)]
 
 
 class UpdateCountForm(forms.Form):
     quantity = forms.TypedChoiceField(choices=allowed_choices, coerce=int)
 
 
-class UserProfileForm(forms.Form):
-    pass
-
-
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['full_name', 'phone', 'delivery_address', 'issue_point', 'total_cost', 'items', 'user']
+        fields = ('full_name', 'phone', 'delivery_address', 'issue_point', 'total_cost', 'items', 'user')
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
@@ -27,17 +24,27 @@ class OrderForm(forms.ModelForm):
 
 
 class AddCommentForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['mark'].empty_label = 'Unselected'
+        self.fields['mark'].empty_label = 'No mark'
 
     class Meta:
         model = Comment
-        fields = ['id', 'text', 'mark']
+        fields = ('text', 'mark')
         widgets = {
             'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Your text'}),
             'mark': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+class ChangeCommentForm(forms.ModelForm):
+    mark = forms.TypedChoiceField(choices=rating_marks_choices, coerce=int)
+
+    class Meta:
+        model = Comment
+        fields = ('text', 'mark')
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
 

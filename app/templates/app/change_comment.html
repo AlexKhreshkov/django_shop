@@ -47,10 +47,20 @@
                         {% endif %}
                     </span>
                     <span class="be-comment-time">
-                        <i style="color: black;" class="fa fa-clock-o">{{ comment.created }}</i>
+                        <i style="color: black  ;" class="fa fa-clock-o">{{ comment.created }}</i>
                     </span>
-                    <p style="color: black;" class="be-comment-text">{{ comment.text }}</p>
-                    <span style="color: red">Mark: {{ comment.mark }}</span>
+                    {% if changeable_comment == comment %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <h3 align="center">Edit your comment!</h3>
+                            {{ form.text }}<br>
+                            <span style="color: red">New mark: {{ form.mark }}</span><br>
+                            <button class="btn btn-success">Submit</button>
+                        </form>
+                    {% else %}
+                        <p class="be-comment-text">{{ comment.text }}</p>
+                        <span style="color: red">Mark: {{ comment.mark }}</span>
+                    {% endif %}
                     {% if  user.is_superuser %}
                         <form method="post">
                             {% csrf_token %}
@@ -63,63 +73,14 @@
                                 {% csrf_token %}
                                 <a style="color: #0000FF" href="{% url 'delete_comment' item.slug comment.id %}">Delete</a>
                             </form>
-                            <form method="post">
-                                {% csrf_token %}
-                                <a style="color: #0000FF" href="{% url 'change_comment' item.slug comment.id %}">Change</a>
-                            </form>
                         {% endif %}
                     {% endif %}
                 </div>
             </div>
             <hr>
         {% endfor %}
-        {% if user.is_authenticated %}
-            <br><h3 align="center">Leave your comment</h3>
-            <form method="post">
-                {% csrf_token %}
-                <div class="be-comment">
-                    <div class="form-group">
-                        <div class="be-img-comment">
-                            {% if user.profile.profile_pic.url %}
-                                <img src="{{ user.profile.profile_pic.url }}" class="be-ava-comment">
-                            {% else %}
-                                <img src="{% static 'media/profiles_images/ava.png' %}" class="be-ava-comment">
-                            {% endif %}
-                        </div>
-                        <div class="be-comment-content">
-                            {{ form.as_p }}
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        {% else %}
-            <h3 align="center">Login to add comment!</h3>
-        {% endif %}
-    {% else %}
-        {% if user.is_authenticated %}
-            <br><h3 align="center">Leave your comment</h3>
-            <form method="post">
-                {% csrf_token %}
-                <div class="be-comment">
-                    <div class="form-group">
-                        <div class="be-img-comment">
-                            {% if user.profile.profile_pic.url %}
-                                <img src="{{ user.profile.profile_pic.url }}" class="be-ava-comment">
-                            {% else %}
-                                <img src="{% static 'media/profiles_images/ava.png' %}" class="be-ava-comment">
-                            {% endif %}
-                        </div>
-                        <div class="be-comment-content">
-                            {{ form.as_p }}
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        {% else %}
-            <h3 align="center">Login to add comment!</h3>
-        {% endif %}
+
+
     {% endif %}
 
 {% endblock %}
