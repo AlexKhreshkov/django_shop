@@ -103,15 +103,26 @@ def change_comment(request, item_slug, comment_id):
     title = item.title
     comments = Comment.objects.filter(item_id__slug=item_slug)
     form = ChangeCommentForm(instance=changeable_comment)
-    old_rating = changeable_comment.mark.mark
     if request.method == 'POST':
         # !!! REMAKE WITH FORMS !!!
+        # if comment is the same skip it
         if not (changeable_comment.text == request.POST['text'] and
                 changeable_comment.mark == RatingMark.objects.get(pk=request.POST['mark'])):
-            changeable_comment.text = request.POST['text']
-            mark = RatingMark.objects.get(pk=request.POST['mark'])
-            changeable_comment.mark = mark
-            changeable_comment.save()
+            if comments.count() == 1:
+                changeable_comment.text = request.POST['text']
+                changeable_comment.mark = RatingMark.objects.get(pk=request.POST['mark'])
+                changeable_comment.save()
+                item.mark = request.POST['mark']
+                item.save()
+            else:
+                changeable_comment.text = request.POST['text']
+                changeable_comment.mark = RatingMark.objects.get(pk=request.POST['mark'])
+                changeable_comment.save()
+                sum = 0
+                for comment in comments:
+                    sum += comment.mark.mark
+                item.mark = sum / comments.count()
+                item.save()
         else:
             print('Comment is the same')
         return redirect(item.get_absolute_url())
