@@ -47,10 +47,11 @@
                         {% endif %}
                     </span>
                     <span class="be-comment-time">
-                        <i style="color: black  ;" class="fa fa-clock-o">{{ comment.created }}</i>
+                        <i style="color: black;" class="fa fa-clock-o">{{ comment.created }}</i>
                     </span>
                     {% if changeable_comment == comment %}
-                        <form method="post">
+                        <a name="comment-form"></a>
+                        <form method="post" id="edit-comment">
                             {% csrf_token %}
                             <h3 align="center">Edit your comment!</h3>
                             {{ form.text }}<br>
@@ -71,7 +72,8 @@
                         {% if comment.user == user %}
                             <form method="post">
                                 {% csrf_token %}
-                                <a style="color: #0000FF" href="{% url 'delete_comment' item.slug comment.id %}">Delete</a>
+                                <a style="color: #0000FF"
+                                   href="{% url 'delete_comment' item.slug comment.id %}">Delete</a>
                             </form>
                         {% endif %}
                     {% endif %}
@@ -79,8 +81,5 @@
             </div>
             <hr>
         {% endfor %}
-
-
     {% endif %}
-
 {% endblock %}

@@ -217,7 +217,6 @@ def make_order(request):
             return redirect('user_profile', request.user.id)
         else:
             print(form.errors)
-
     else:
         form = OrderForm()
     context = {

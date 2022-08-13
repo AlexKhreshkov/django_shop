@@ -61,11 +61,13 @@
                         {% if comment.user == user %}
                             <form method="post">
                                 {% csrf_token %}
-                                <a style="color: #0000FF" href="{% url 'delete_comment' item.slug comment.id %}">Delete</a>
+                                <a style="color: #0000FF"
+                                   href="{% url 'delete_comment' item.slug comment.id %}">Delete</a>
                             </form>
                             <form method="post">
                                 {% csrf_token %}
-                                <a style="color: #0000FF" href="{% url 'change_comment' item.slug comment.id %}">Change</a>
+                                <a style="color: #0000FF"
+                                   href="{% url 'change_comment' item.slug comment.id %}#comment-form">Change</a>
                             </form>
                         {% endif %}
                     {% endif %}
