@@ -13,6 +13,7 @@ def main(request):
     categories = Category.objects.all()
     cart = Cart(request)
     cart_len = cart.cart_len()
+    form = SearchForm()
     context = {
         'items': items,
         'categories': categories,
@@ -21,7 +22,21 @@ def main(request):
         'cart': cart,
         'cart_len': cart_len,
         'page_name': 'main',
+        'form': form,
     }
+    if request.method == 'POST':
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_text = search_form.cleaned_data['text']
+            suitable_items = []
+            for item in items:
+                if search_text in item.title or search_text in item.description:
+                    suitable_items.append(item)
+                context['items'] = Item.objects.filter(title__in=suitable_items)
+                founded_items = len(suitable_items)
+                context['founded_items'] = founded_items
+            return render(request, 'app/main.html', context=context)
+
     return render(request, 'app/main.html', context=context)
 
 
@@ -38,6 +53,7 @@ def show_by_category(request, cat_slug):
         'title': title,
         'cart': cart,
         'cart_len': cart_len,
+        'chosen_category':chosen_category,
     }
     return render(request, 'app/main.html', context=context)
 

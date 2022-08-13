@@ -38,8 +38,24 @@
     {% endfor %}
 {% endblock %}
 
+{% block search %}
+    {% if not chosen_category %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <button type="submit" class="btn btn-success">Search</button>
+                </div>
+                {{ form.text }}
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}
+
+
 {% block body %}
     {% if items %}
+    {% if not founded_items %}
         {% for item in items %}
             <div class="item-block">
                 <img class="item_img" src="{{ item.image.url }}">
@@ -55,6 +71,22 @@
             <hr>
         {% endfor %}
     {% else %}
-        <h1>No items :(</h1>
+        <h3 align="center">Founded {{ founded_items }} item's:</h3>
+        {% for item in items %}
+            <div class="item-block">
+                <img class="item_img" src="{{ item.image.url }}">
+                Item: <a href="{{ item.get_absolute_url }}">{{ item.title }}</a><br>
+                Category: {{ item.category }}<br>
+                Price: {{ item.price }}$ <br>
+                Rating: {{ item.mark }}
+                <form method="post" action="{% url 'add_item' item.slug %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success" id="{{ item.id }}">Add to cart</button>
+                </form>
+            </div>
+            <hr>
+        {% endfor %}
     {% endif %}
+    {% else %}
+        <h1>No items :(</h1>{% endif %}
 {% endblock %}

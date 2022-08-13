@@ -29,8 +29,8 @@
                 <form method="post">
                     <div class="form-group">
                         {% csrf_token %}
-                        Full name: {{ form.full_name }} <br>
-                        Phone: {{ form.phone }}<br>
+                        Full name*: {{ form.full_name }} <br>
+                        Phone*: {{ form.phone }}<br>
                         Delivery address: {{ form.delivery_address }}<br>
                         Issue point: {{ form.issue_point }}<br>
                         <select name="items" required id="id_items" hidden multiple>
