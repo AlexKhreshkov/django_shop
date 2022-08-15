@@ -1,9 +1,5 @@
-from statistics import mean
-
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
-from django.views.decorators.http import require_POST
-
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
 from app.forms import *
 from app.models import Item, Category, Cart, User, Profile, Order, RatingMark, Comment
 
@@ -53,7 +49,7 @@ def show_by_category(request, cat_slug):
         'title': title,
         'cart': cart,
         'cart_len': cart_len,
-        'chosen_category':chosen_category,
+        'chosen_category': chosen_category,
     }
     return render(request, 'app/main.html', context=context)
 
@@ -156,6 +152,7 @@ def add_to_cart(request, item_slug):
     c = Cart(request)
     item = get_object_or_404(Item, slug=item_slug)
     c.add_product(item)
+    print(c)
     return redirect('show_cart')
 
 

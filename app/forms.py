@@ -3,12 +3,17 @@ from django.contrib.auth.models import User
 
 from app.models import Order, Comment, Profile
 
-allowed_choices = [(i, str(i)) for i in range(1, 11)]
-rating_marks_choices = [(i, str(i)) for i in range(1, 6)]
+MIN_ITEMS_COUNT_CART = 1
+MAX_ITEMS_COUNT_CART = 10
+MIN_RATING_MARK = 1
+MAX_RATING_MARK = 5
+
+items_count_choices = [(i, str(i)) for i in range(MIN_ITEMS_COUNT_CART, MAX_ITEMS_COUNT_CART + 1)]
+rating_marks_choices = [(i, str(i)) for i in range(MIN_RATING_MARK, MAX_RATING_MARK + 1)]
 
 
 class UpdateCountForm(forms.Form):
-    quantity = forms.TypedChoiceField(choices=allowed_choices, coerce=int)
+    quantity = forms.TypedChoiceField(choices=items_count_choices, coerce=int)
 
 
 class OrderForm(forms.ModelForm):

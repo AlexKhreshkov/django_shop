@@ -1,8 +1,5 @@
 from django.contrib import admin
-
-# Register your models here.
 from django.utils.safestring import mark_safe
-
 from app.models import Category, Item, Profile, Order, RatingMark, Comment
 
 
@@ -52,7 +49,7 @@ class RatingMarkAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text', 'created', 'item', 'mark', 'user')
+    list_display = ('id', 'text', 'created', 'updated', 'item', 'mark', 'user')
     list_display_links = ('id', 'text', 'item', 'mark', 'user')
 
 

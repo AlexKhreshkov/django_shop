@@ -1,6 +1,4 @@
-from decimal import Decimal
 from model_utils import Choices
-
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.db import models
@@ -10,8 +8,8 @@ from django.urls import reverse
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=100,unique=True)
+    slug = models.SlugField()
 
     def __str__(self):
         return self.name
@@ -147,8 +145,9 @@ class Comment(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     text = models.TextField(max_length=3000)
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateField(auto_now=True)
     mark = models.ForeignKey(RatingMark, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Coment on: {self.item}"
+        return f"Comment on: {self.item} by {self.user}"
 
