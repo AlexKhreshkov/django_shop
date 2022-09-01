@@ -1,12 +1,14 @@
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from app.forms import *
-from app.models import Item, Category, Cart, User, Profile, Order, RatingMark, Comment
+from app.models import Item, Category, User, Profile, Order, RatingMark, Comment
+from app.cart import Cart
 
 
 def main(request):
-    items = Item.objects.all()
+    items = Item.objects.all().order_by('-mark')
     categories = Category.objects.all()
+    avg_order_price = Order.objects.get()
     cart = Cart(request)
     cart_len = cart.cart_len()
     form = SearchForm()
@@ -19,6 +21,7 @@ def main(request):
         'cart_len': cart_len,
         'page_name': 'main',
         'form': form,
+        'avg_order_price': avg_order_price,
     }
     if request.method == 'POST':
         search_form = SearchForm(request.POST)
@@ -32,7 +35,6 @@ def main(request):
                 founded_items = len(suitable_items)
                 context['founded_items'] = founded_items
             return render(request, 'app/main.html', context=context)
-
     return render(request, 'app/main.html', context=context)
 
 

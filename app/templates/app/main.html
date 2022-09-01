@@ -36,6 +36,7 @@
             <a href="{% url 'show_by_category' cat.slug %}">{{ cat.name }}</a>
         {% endif %}
     {% endfor %}
+
 {% endblock %}
 
 {% block search %}
@@ -52,13 +53,14 @@
     {% endif %}
 {% endblock %}
 
-
 {% block body %}
     {% if items %}
     {% if not founded_items %}
         {% for item in items %}
             <div class="item-block">
+                {% if item.image %}
                 <img class="item_img" src="{{ item.image.url }}">
+                {% endif %}
                 Item: <a href="{{ item.get_absolute_url }}">{{ item.title }}</a><br>
                 Category: {{ item.category }}<br>
                 Price: {{ item.price }}$ <br>
@@ -74,7 +76,9 @@
         <h3 align="center">Founded {{ founded_items }} item's:</h3>
         {% for item in items %}
             <div class="item-block">
+                {% if item.image %}
                 <img class="item_img" src="{{ item.image.url }}">
+                {% endif %}
                 Item: <a href="{{ item.get_absolute_url }}">{{ item.title }}</a><br>
                 Category: {{ item.category }}<br>
                 Price: {{ item.price }}$ <br>
