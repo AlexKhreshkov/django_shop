@@ -19,10 +19,6 @@
         Price: {{ item.price }}$ <br>
         Rating: {{ item.mark }} <br>
         Description: {{ item.description|safe }}
-        <form method="post" action="{% url 'add_item' item.slug %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-success" id="{{ item.id }}">Add to cart</button>
-        </form>
     </div>
     <hr>
     {% if comments %}
@@ -52,14 +48,14 @@
                     <p style="color: black;" class="be-comment-text">{{ comment.text }}</p>
                     <span style="color: red">Mark: {{ comment.mark }}</span>
                     {% if  user.is_superuser %}
-                        <form method="post">
+                        <form>
                             {% csrf_token %}
                             <a style="color: #0000FF" href="{% url 'delete_comment' item.slug comment.id %}">Delete</a>
                         </form>
                     {% endif %}
                     {% if not user.is_superuser %}
                         {% if comment.user == user %}
-                            <form method="post">
+                            <form>
                                 {% csrf_token %}
                                 <a style="color: #0000FF"
                                    href="{% url 'delete_comment' item.slug comment.id %}">Delete</a>
@@ -67,7 +63,7 @@
                             <form method="post">
                                 {% csrf_token %}
                                 <a style="color: #0000FF"
-                                   href="{% url 'change_comment' item.slug comment.id %}#comment-form">Change</a>
+                                   href="{% url 'show_changeable_comment' item.slug comment.id %}#comment-form">Change</a>
                             </form>
                         {% endif %}
                     {% endif %}
@@ -77,7 +73,7 @@
         {% endfor %}
         {% if user.is_authenticated %}
             <br><h3 align="center">Leave your comment</h3>
-            <form method="post">
+            <form method="post" action="{% url 'add_comment' item.slug %}">
                 {% csrf_token %}
                 <div class="be-comment">
                     <div class="form-group">
@@ -123,5 +119,4 @@
             <h3 align="center">Login to add comment!</h3>
         {% endif %}
     {% endif %}
-
 {% endblock %}

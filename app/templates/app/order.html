@@ -9,7 +9,7 @@
 {% block body %}
     {% if user.is_authenticated %}
         {% if cart %}
-            {% for item in cart %}
+            {% for item in order_items %}
                 <div class="d-flex justify-content-center">
                     <div class="mt-auto p-2">
                         <div><img width="200px" src="{{ item.image.url }}"></div>
@@ -33,15 +33,9 @@
                         Phone*: {{ form.phone }}<br>
                         Delivery address: {{ form.delivery_address }}<br>
                         Issue point: {{ form.issue_point }}<br>
-                        <select name="items" required id="id_items" hidden multiple>
-                            {% for item in order_items %}
-                                {% if item.id|stringformat:"i" in cart.cart.keys %}
-                                    <option selected>{{ item.id }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
                         <button align="center" type="submit" class="btn btn-primary">Make order</button>
                     </div>
+                {{ form.errors }}
                 </form>
             </div>
         {% else %}

@@ -1,7 +1,7 @@
 .item_img{
     display: block;
-    width: 400px;
-    height: 300px;
+    width: 200px;
+    height: 150px;
 }
 
 #profile_img{
@@ -17,7 +17,6 @@
 .selected {
     color: red;
     pointer-events: none;
-    cursor: default;
 }
 
 .order-form{

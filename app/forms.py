@@ -19,7 +19,7 @@ class UpdateCountForm(forms.Form):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ('full_name', 'phone', 'delivery_address', 'issue_point', 'total_cost', 'items', 'user')
+        fields = ('full_name', 'phone', 'delivery_address', 'issue_point')
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),

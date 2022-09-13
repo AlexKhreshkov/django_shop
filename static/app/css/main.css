@@ -6,7 +6,6 @@ img {
 
 .selected {
     color: red;
-    pointer-events: none;
     cursor: default;
 }
 .menu {

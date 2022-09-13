@@ -41,8 +41,7 @@
 
 {% block search %}
     {% if not chosen_category %}
-        <form method="post">
-            {% csrf_token %}
+        <form method="get" action="{% url 'search' %}">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <button type="submit" class="btn btn-success">Search</button>
@@ -55,42 +54,64 @@
 
 {% block body %}
     {% if items %}
-    {% if not founded_items %}
-        {% for item in items %}
-            <div class="item-block">
-                {% if item.image %}
-                <img class="item_img" src="{{ item.image.url }}">
-                {% endif %}
-                Item: <a href="{{ item.get_absolute_url }}">{{ item.title }}</a><br>
-                Category: {{ item.category }}<br>
-                Price: {{ item.price }}$ <br>
-                Rating: {{ item.mark }}
-                <form method="post" action="{% url 'add_item' item.slug %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success" id="{{ item.id }}">Add to cart</button>
-                </form>
-            </div>
-            <hr>
-        {% endfor %}
+        {% if not is_founded_items %}
+            {% for item in items %}
+                <div class="item-block">
+                    {% if item.image %}
+                        <img class="item_img" src="{{ item.image.url }}">
+                    {% endif %}
+                    Item: <a href="{{ item.get_absolute_url }}">{{ item.title }}</a><br>
+                    Category: {{ item.category }}<br>
+                    Price: {{ item.price }}$ <br>
+                    Rating: {{ item.mark }}
+                    <form method="post" action="{% url 'add_item' item.slug %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success" id="{{ item.id }}">Add to cart</button>
+                    </form>
+                </div>
+                <hr>
+            {% endfor %}
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination pagination-lg justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item "><a class="page-link"
+                                                      href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                        {% endif %}
+                        {% for p in page_obj.paginator.page_range %}
+                            {% if page_obj.number == p %}
+                                <li class="page-item active "><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                            {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                                <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item "><a class="page-link"
+                                                      href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <h3 align="center">Founded {{ is_founded_items }} item's:</h3>
+            {% for item in items %}
+                <div class="item-block">
+                    {% if item.image %}
+                        <img class="item_img" src="{{ item.image.url }}">
+                    {% endif %}
+                    Item: <a href="{{ item.get_absolute_url }}">{{ item.title }}</a><br>
+                    Category: {{ item.category }}<br>
+                    Price: {{ item.price }}$ <br>
+                    Rating: {{ item.mark }}
+                    <form method="post" action="{% url 'add_item' item.slug %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success" id="{{ item.id }}">Add to cart</button>
+                    </form>
+                </div>
+                <hr>
+            {% endfor %}
+        {% endif %}
     {% else %}
-        <h3 align="center">Founded {{ founded_items }} item's:</h3>
-        {% for item in items %}
-            <div class="item-block">
-                {% if item.image %}
-                <img class="item_img" src="{{ item.image.url }}">
-                {% endif %}
-                Item: <a href="{{ item.get_absolute_url }}">{{ item.title }}</a><br>
-                Category: {{ item.category }}<br>
-                Price: {{ item.price }}$ <br>
-                Rating: {{ item.mark }}
-                <form method="post" action="{% url 'add_item' item.slug %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success" id="{{ item.id }}">Add to cart</button>
-                </form>
-            </div>
-            <hr>
-        {% endfor %}
+        <h1>No items :(</h1>
     {% endif %}
-    {% else %}
-        <h1>No items :(</h1>{% endif %}
 {% endblock %}

@@ -1,3 +1,4 @@
+import mimetypes
 import os
 from pathlib import Path
 import environ
@@ -28,6 +29,7 @@ INSTALLED_APPS = [
     'app',
     'bootstrap4',
     'ckeditor',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -38,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'shop_website.urls'
@@ -72,7 +75,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -94,6 +96,12 @@ AUTHENTICATION_BACKENDS = [
 
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
 ]
 
 LANGUAGE_CODE = 'en-us'
@@ -118,3 +126,4 @@ SITE_ID = 2
 
 # https://django-ckeditor.readthedocs.io/en/latest/#installation
 CKEDITOR_UPLOAD_PATH = "media/"
+

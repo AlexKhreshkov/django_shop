@@ -3,15 +3,15 @@
 
 {% block head_text %}
     <div class="alert alert-primary" role="alert">
-        <h1 align="center">{{ user_profile.user.username }}'s profile</h1>
+        <h1 align="center">{{ username }}'s profile</h1>
     </div>
 {% endblock %}
 
 {% block body %}
     <div class="profile_content">
         <img id="profile_img" src="{{ user_profile.profile_pic.url }}">
-        {{ user_profile.user.username }}<br><br>
-        <form method="post" enctype="multipart/form-data">
+        {{ username }}<br><br>
+        <form method="post" enctype="multipart/form-data" action="{% url 'update_profile' user_profile.id%}">
             {% csrf_token %}
             New avatar: {{ profile_form.profile_pic }}
             <hr>
@@ -32,7 +32,7 @@
                 </div>
                 <br>
             </div>
-            <button type="submit" onclick="success()" class="btn btn-success">Update</button>
+            <button type="submit" class="btn btn-success">Update</button>
         </form>
     </div>
     <hr>
