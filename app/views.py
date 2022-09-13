@@ -14,7 +14,6 @@ class MainPageView(GetMainPageContextDataMixin, ListView):
     template_name = 'app/main.html'
     context_object_name = 'items'
     ordering = ('-mark',)
-    paginate_by = 3
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -22,7 +21,7 @@ class MainPageView(GetMainPageContextDataMixin, ListView):
         return context | mixin_context
 
     def get_queryset(self):
-        return Item.objects.all().select_related('category')
+        return Item.objects.all().select_related('category').order_by('-mark')
 
 
 class Search(GetMainPageContextDataMixin, ListView):
