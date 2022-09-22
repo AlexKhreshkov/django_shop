@@ -1,9 +1,10 @@
 simple_python_file.py
 test.txt
-data.json
-.idea
+.idea/
 tests.py
 Dockerfile
 docker-compose.yml
-/logs
-/config
+venv/
+.coverage
+.cache
+__pycache__/

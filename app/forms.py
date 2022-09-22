@@ -1,12 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from app.constants import MIN_ITEMS_COUNT_CART, MAX_ITEMS_COUNT_CART, MAX_RATING_MARK, MIN_RATING_MARK
 from app.models import Order, Comment, Profile
-
-MIN_ITEMS_COUNT_CART = 1
-MAX_ITEMS_COUNT_CART = 10
-MIN_RATING_MARK = 1
-MAX_RATING_MARK = 5
 
 items_count_choices = [(i, str(i)) for i in range(MIN_ITEMS_COUNT_CART, MAX_ITEMS_COUNT_CART + 1)]
 rating_marks_choices = [(i, str(i)) for i in range(MIN_RATING_MARK, MAX_RATING_MARK + 1)]
@@ -29,6 +25,7 @@ class OrderForm(forms.ModelForm):
 
 
 class AddCommentForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['mark'].empty_label = 'No mark'
@@ -49,14 +46,14 @@ class ChangeCommentForm(forms.ModelForm):
         model = Comment
         fields = ('text', 'mark')
         widgets = {
-            'text': forms.Textarea(attrs={'class': 'form-control'}),
+            'text': forms.Textarea(attrs={'class': 'form-control','placeholder': 'Your text'}),
         }
 
 
 class AddProfileInfoForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['phone', 'birth_date', 'profile_pic', 'location']
+        fields = ('phone', 'birth_date', 'profile_pic', 'location')
         widgets = {
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'birth_date': forms.DateInput(attrs={'class': 'form-control'}),
@@ -67,7 +64,7 @@ class AddProfileInfoForm(forms.ModelForm):
 class AddUserInfoForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
+        fields = ('username', 'first_name', 'last_name', 'email')
 
 
 class SearchForm(forms.Form):

@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class MainPageView(GetMainPageContextDataMixin, ListView):
     template_name = 'app/main.html'
     context_object_name = 'items'
-    ordering = ('-mark',)
+    paginate_by = 3
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -30,11 +30,8 @@ class Search(GetMainPageContextDataMixin, ListView):
 
     def search_check(self):
         search_text = self.request.GET.get('text')
-        suitable_items = []
         items = Item.objects.all()
-        for item in items:
-            if search_text in item.title or search_text in item.description:
-                suitable_items.append(item)
+        suitable_items = [item for item in items if search_text in item.title or search_text in item.description]
         items = Item.objects.filter(title__in=suitable_items).select_related('category')
         return items
 
