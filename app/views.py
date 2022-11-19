@@ -96,8 +96,7 @@ class AddComment(View):
             form.item = item
             form.user = self.request.user
             form.save()
-            item.mark = recalculate_item_rating(item_slug)
-            item.save()
+
         return redirect(item.get_absolute_url())
 
 
